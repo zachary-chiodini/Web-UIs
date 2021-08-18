@@ -1,5 +1,5 @@
 <template>
-  <the-header :title="'Home Page'"/>
+  <the-header :title="'Post to Database'"/>
 </template>
 
 <script>

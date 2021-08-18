@@ -9,8 +9,13 @@ const routes = [
   },
   {
     path: "/search",
-    name: "Search",
-    component: () => import("@/views/Search.vue"),
+    name: "SearchShow",
+    component: () => import("@/views/SearchShow.vue"),
+  },
+  {
+    path: "/post",
+    name: "PostShow",
+    component: () => import("@/views/PostShow.vue"),
   },
 ];
 
