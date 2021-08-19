@@ -1,54 +1,70 @@
 <template>
-  <div>
-    <ag-grid-vue style="width: 500px; height: 500px;"
-      class="ag-theme-alpine"
-      rowSelection="multiple"
-      :columnDefs="columns"
-      :rowData="rowData">
-    </ag-grid-vue>
-  </div>
+  <ag-grid-vue 
+    style="height: 50vh;"
+    class="ag-theme-alpine"
+    rowSelection="multiple"
+    :columnDefs="columnDefs"
+    :rowData="query">
+  </ag-grid-vue>
 </template>
 
 <script>
-import { AgGridVue } from 'ag-grid-vue3'
+import { AgGridVue } from "ag-grid-vue3";
 
 export default {
   name: 'AG Grid Component',
   props: {
-    query: { type: Array, required: true }
+    entity: {type: String, required: true},
+    chem_trans_db: {type: Boolean, required: true},
   },
-  data () {
+  data() {
     return {
-      columnDefs: []
+      query: null,
+      columnDefs: [],
+      chemTransApiUrl: '',
+      dssToxApiUrl: ''
     }
   },
-  components: {
-    AgGridVue
-  },
-  beforeMount () {
-    let i = 0
-    for (const column in this.rowData[0]) {
-      if (i === 0) {
-        this.columnDefs.push({ 
-          field: column, 
-          sortable: true, 
-          filter: true, 
-          checkboxSelection: true 
-        })
+  components: { AgGridVue },
+  methods: {
+    pushColumnDef(column, checkboxOption) {
+      this.columnDefs.push({ 
+        field: column, 
+        sortable: true, 
+        filter: true, 
+        checkboxSelection: checkboxOption
+      })
+    },
+    getColumnDefs() {
+      Object.keys(this.query[0]).forEach(
+        (columnName, index) => {
+          if (index === 0) {
+            this.pushColumnDef(columnName, true)
+          } else {
+            this.pushColumnDef(columnName, false)
+          }
+        }
+      )
+    },
+    async getRequest(apiUrl) {
+      const response = await fetch(`${apiUrl}/${this.entity}`)
+      this.query = await response.json()
+      this.getColumnDefs()
+    },
+    async initQuery() {
+      if (this.chem_trans_db) {
+        this.getRequest(this.chemTransApiUrl)
       } else {
-        this.columnDefs.push({ 
-          field: column, 
-          sortable: true, 
-          filter: true 
-        })
+        this.getRequest(this.dssToxApiUrl)
       }
-      i += 1
     }
-  }
+  },
+  async created() {
+    this.initQuery()
+    this.$watch(
+      () => this.$route.params,
+      this.initQuery
+    )
+  },
 }
 </script>
-
-<style lang="scss">
-@import "../node_modules/ag-grid-community/dist/styles/ag-grid.css";
-@import "../node_modules/ag-grid-community/dist/styles/ag-theme-alpine.css";
-</style>

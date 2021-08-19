@@ -13,6 +13,8 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 @import "assets/style.css";
+@import "../node_modules/ag-grid-community/dist/styles/ag-grid.css";
+@import "../node_modules/ag-grid-community/dist/styles/ag-theme-alpine.css";
 </style>
