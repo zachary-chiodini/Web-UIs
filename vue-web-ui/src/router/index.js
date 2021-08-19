@@ -10,12 +10,16 @@ const routes = [
   {
     path: "/search",
     name: "SearchShow",
-    component: () => import("@/views/SearchShow.vue"),
+    component: () => import(
+      /*webpackChunkName: "search-view"*/ "@/views/SearchShow.vue"
+      ),
   },
   {
     path: "/post",
     name: "PostShow",
-    component: () => import("@/views/PostShow.vue"),
+    component: () => import(
+      /*webpackChunkName: "post-view"*/ "@/views/PostShow.vue"
+      ),
   },
 ];
 
