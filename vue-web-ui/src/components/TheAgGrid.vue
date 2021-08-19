@@ -15,7 +15,7 @@ export default {
   name: 'AG Grid Component',
   props: {
     entity: {type: String, required: true},
-    chem_trans_db: {type: Boolean, required: true},
+    chemTransDb: {type: Boolean, required: true},
   },
   data() {
     return {
@@ -52,7 +52,7 @@ export default {
       this.getColumnDefs()
     },
     async initQuery() {
-      if (this.chem_trans_db) {
+      if (this.chemTransDb) {
         this.getRequest(this.chemTransApiUrl)
       } else {
         this.getRequest(this.dssToxApiUrl)

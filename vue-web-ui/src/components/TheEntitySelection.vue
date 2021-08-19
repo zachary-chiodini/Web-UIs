@@ -6,8 +6,13 @@
 
 <script>
 export default {
-  daata() {
-    
+  data() {
+    return {
+      entitySelected: {},
+      entitySelection: [
+        {name: '', chemTransDb: false}
+      ]
+    }
   }
 }
 </script>
