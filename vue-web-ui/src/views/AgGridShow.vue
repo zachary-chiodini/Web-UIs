@@ -12,10 +12,9 @@
 import { AgGridVue } from "ag-grid-vue3";
 
 export default {
-  name: 'AG Grid Component',
   props: {
     entity: {type: String, required: true},
-    chemTransDb: {type: Boolean, required: true},
+    chemTransDb: {type: Number, required: true},
   },
   data() {
     return {
@@ -52,7 +51,7 @@ export default {
       this.getColumnDefs()
     },
     async initQuery() {
-      if (this.chemTransDb) {
+      if (this.chemTransDb === 1) {
         this.getRequest(this.chemTransApiUrl)
       } else {
         this.getRequest(this.dssToxApiUrl)
