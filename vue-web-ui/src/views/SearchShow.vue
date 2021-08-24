@@ -128,15 +128,16 @@ button.selection-bar {
   text-align: left;
   margin-left: auto;
   margin-right: auto;
-  box-shadow: 0px 0px 1px grey
 }
 button.selection-bar .caret {
   float: right
 }
 .options-panel {
-  width: 100%;
   text-align: left;
-  border: 1px solid #003F65;
+  padding-top: 5px;
+  border-left: 1px solid #003F65;
+  border-right: 1px solid #003F65;
+  border-bottom: 1px solid #003F65;
 }
 .options-panel .option {
   font-size: 18px;
@@ -156,7 +157,7 @@ button.selection-bar .caret {
   font-size: 18px;
 }
 .close-or-execute .space {
-  padding: 10px;
+  padding: 5px;
 }
 .close-or-execute .close {
   font-size: 18px;
