@@ -3,7 +3,7 @@
     <the-header :title="'Search Database'"/>
     <section class="selection-panel">
       <button 
-        class="selection-text"
+        class="selection-bar"
         @click="displayOptionsPanel()"
       >
         Select the Database Entity or Entities to Query
@@ -34,12 +34,13 @@
             :disabled="!entityChecked()"
           >
             <router-link
+              @click="displayOptionsPanel()"
               :class="{ disabled: !entityChecked()}"
               :to="{
                 name: 'AgGridShow',
                 params: {
-                  entity: entitySelection[getIndex()].name,
-                  chemTransDb: entitySelection[getIndex()].chemTransDb
+                  entity: entitySelection[getSelectedIndex()].name,
+                  chemTransDb: entitySelection[getSelectedIndex()].chemTransDb
                 }
               }"
             >
@@ -77,8 +78,8 @@ export default {
   },
   methods: {
     convertName(name) {
-      return name.replace('_', ' ')
-        .replace(/\b\w/g, char => char.toUpperCase())
+      return name.replaceAll('_', ' ')
+        .replaceAll(/\b\w/g, char => char.toUpperCase())
     },
     displayOptionsPanel() {
       if (this.displayOptionsBool) {
@@ -90,13 +91,13 @@ export default {
     entityChecked() {
       return this.checked.some(bool => bool)
     },
-    getIndex() {
-      this.checked.forEach(
-        (bool, index) => {
-          if (bool) { return index }
-        }
-      )
-      return 0
+    getSelectedIndex() {
+      const index = this.checked.indexOf(true)
+      if (index === -1) {
+        return 0
+      } else {
+        return index
+      }
     }
   }
 }
@@ -104,48 +105,61 @@ export default {
 
 <style>
 a {
-  color: black;
+  color: #003F65;
   text-decoration: none;
 }
 .selection-panel {
-  border: 1px solid black;
-  width: 50vw;
-  margin-left: auto;
-  margin-right: auto;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  width: 50%;
+  margin: auto;
 }
-button.selection-text {
+button.selection-bar {
+  border: 1px solid #003F65;
+  color: #003F65;
+  font-weight: bold;
   display: block;
-  font-size: 20px;
-  border: 0px;
-  padding: 10px;
-  width: 50vw;
+  font-size: 16px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  width: 100%;
   text-align: left;
   margin-left: auto;
   margin-right: auto;
+  box-shadow: 0px 0px 1px grey
 }
-button.selection-text .caret {
+button.selection-bar .caret {
   float: right
 }
 .options-panel {
-  padding: 10px;
+  width: 100%;
   text-align: left;
+  border: 1px solid #003F65;
 }
 .options-panel .option {
-  font-size: 20px;
-  padding-bottom: 10px;
+  font-size: 18px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 .close-or-execute {
   text-align: right;
-  font-size: 20px;
+  font-size: 18px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-right: 10px;
 }
 .close-or-execute .execute {
-  font-size: 20px;
+  font-size: 18px;
 }
 .close-or-execute .space {
-  padding: 5px;
+  padding: 10px;
 }
 .close-or-execute .close {
-  font-size: 20px;
+  font-size: 18px;
 }
 .disabled {
   opacity: 0.5;

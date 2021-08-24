@@ -17,20 +17,18 @@
 
 <style>
 #nav {
-  top: 0;
-  left: 0;
-  right: 0;
-  margin-top: 0;
+  margin: 0;
   padding: 5px;
-  font-family: Arial, Helvetica, sans-serif;
-  font-weight: bold;
-  font-size: 20px;
-  background: whitesmoke;
-  border-bottom: 2px solid #4e6c71;
+  font-family: calibri;
+  font-size: 16px;
+  color: white;
+  background: #0E6993;
+  text-shadow: 0px 0px 1px grey;
+  box-shadow: 0px 0px 5px grey;
 }
 #nav a {
   display: inline-block;
-  color: #2c3e50;
+  color: white;
   margin-right: 20px;
   margin-left: 20px;
 }

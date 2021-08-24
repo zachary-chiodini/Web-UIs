@@ -3,7 +3,7 @@
     <router-link to="/">
       <table class="logo">
         <tr>
-          <td rowspan="3" width="100px">
+          <td rowspan="3" width="50px">
             <img 
               src="@/assets/chemlogo.png" 
               alt="Benzene"
@@ -28,46 +28,41 @@
 
 <style>
 #banner {
-  top: 0;
-  left: 0;
-  right: 0;
-  margin-top: 0;
-  padding: 5px;
-  background: #2c3e50;
-  border-bottom: 5px solid #4e6c71;
+  margin: 0;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  background: #0071BC;
+  font-size: 16px;
+  text-shadow: 1px 1px 5px grey;
+
 }
 #banner img {
-  height: 100%;
   width: 100%;
+  -webkit-filter: drop-shadow(1px 1px 5px grey);
+  filter: drop-shadow(1px 1px 5px grey);
 }
-
 #banner table.logo {
   width: 100%;
-  padding-left: 10px;
-  padding-right: 20px;
 }
 #banner .header-1 {
   font-family: Cambria;
-  font-size: 30px;
   font-style: normal;
-  font-weight: 0;
   color: white;
-  padding-left: 15px;
+  padding-left: 7px;
 }
 #banner .header-2 {
   font-family: Aparajita;
-  font-size: 30px;
   font-style: italic;
-  font-weight: 100;
   color: white;
-  padding-left: 15px;
+  padding-left: 7px;
 }
 #banner hr {
   color: white;
-  border: 0.5px solid white;
-  background-color: white;
-  border-radius: 10px;
-  margin-left: 15px;
+  border: 1px solid white;
+  margin-left: 7px;
+  box-shadow: 1px 1px 5px grey;
 }
 #banner a:link {
   text-decoration: none;

@@ -1,7 +1,9 @@
 <template>
   <TheBanner/>
   <TheNavigation/>
-  <router-view></router-view>
+  <div id="content-box">
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>

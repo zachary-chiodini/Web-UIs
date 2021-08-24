@@ -1,11 +1,13 @@
 <template>
-  <ag-grid-vue 
-    style="height: 50vh;"
-    class="ag-theme-alpine"
-    rowSelection="multiple"
-    :columnDefs="columnDefs"
-    :rowData="query">
-  </ag-grid-vue>
+  <div class='ag-grid'>
+    <ag-grid-vue
+      style="height: 62vh;"
+      class="ag-theme-alpine"
+      rowSelection="multiple"
+      :columnDefs="columnDefs"
+      :rowData="query">
+    </ag-grid-vue>
+  </div>
 </template>
 
 <script>
@@ -21,16 +23,20 @@ export default {
       query: null,
       columnDefs: [],
       chemTransApiUrl: '',
-      dssToxApiUrl: ''
+      dssToxApiUrl: 'http://127.0.0.1:5001/api'
     }
   },
   components: { AgGridVue },
+  computed: {
+
+  },
   methods: {
     pushColumnDef(column, checkboxOption) {
       this.columnDefs.push({ 
         field: column, 
         sortable: true, 
         filter: true, 
+        floatingFilter: true,
         checkboxSelection: checkboxOption
       })
     },
@@ -45,12 +51,16 @@ export default {
         }
       )
     },
+    resetColumnDefs() {
+      this.columnDefs = []
+    },
     async getRequest(apiUrl) {
       const response = await fetch(`${apiUrl}/${this.entity}`)
       this.query = await response.json()
       this.getColumnDefs()
     },
     async initQuery() {
+      this.resetColumnDefs()
       if (this.chemTransDb === 1) {
         this.getRequest(this.chemTransApiUrl)
       } else {
@@ -67,3 +77,11 @@ export default {
   },
 }
 </script>
+
+<style>
+.ag-grid {
+  padding-bottom: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+</style>
