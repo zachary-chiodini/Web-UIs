@@ -35,12 +35,12 @@
           >
             <router-link
               @click="displayOptionsPanel()"
-              :class="{ disabled: !entityChecked()}"
+              :class="{ disabled: !checkedBool }"
               :to="{
                 name: 'AgGridShow',
                 params: {
-                  entity: entitySelection[getSelectedIndex()].name,
-                  chemTransDb: entitySelection[getSelectedIndex()].chemTransDb
+                  entity: entitySelection[selectedIndex].name,
+                  chemTransDb: entitySelection[selectedIndex].chemTransDb
                 }
               }"
             >
@@ -73,7 +73,9 @@ export default {
         {id: 8, name: 'transformation_view', chemTransDb: 1}
       ],
       checked: [false, false, false, false, false, false, false, false],
-      displayOptionsBool: false
+      displayOptionsBool: false,
+      checkedBool: false,
+      selectedIndex: 0
     }
   },
   methods: {
@@ -89,14 +91,15 @@ export default {
       }
     },
     entityChecked() {
-      return this.checked.some(bool => bool)
-    },
-    getSelectedIndex() {
       const index = this.checked.indexOf(true)
       if (index === -1) {
-        return 0
+        this.selectedIndex = 0
+        this.checkedBool = false
+        return this.checkedBool
       } else {
-        return index
+        this.selectedIndex = index
+        this.checkedBool = true
+        return this.checkedBool
       }
     }
   }
@@ -105,7 +108,7 @@ export default {
 
 <style>
 a {
-  color: #003F65;
+  color: black;
   text-decoration: none;
 }
 .selection-panel {
@@ -115,11 +118,9 @@ a {
   margin: auto;
 }
 button.selection-bar {
-  border: 1px solid #003F65;
-  color: #003F65;
-  font-weight: bold;
+  border: 1px solid black;
   display: block;
-  font-size: 16px;
+  font-size: 18px;
   padding-top: 5px;
   padding-bottom: 5px;
   padding-left: 10px;
@@ -135,11 +136,12 @@ button.selection-bar .caret {
 .options-panel {
   text-align: left;
   padding-top: 5px;
-  border-left: 1px solid #003F65;
-  border-right: 1px solid #003F65;
-  border-bottom: 1px solid #003F65;
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+  border-bottom: 1px solid black;
 }
 .options-panel .option {
+  color: black;
   font-size: 18px;
   padding-top: 5px;
   padding-bottom: 5px;
