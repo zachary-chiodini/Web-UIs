@@ -37,8 +37,8 @@ const ExcelJS = require('exceljs');
 
 export default {
   props: {
-    entity: {type: String, required: true},
-    chemTransDb: {type: Number, required: true},
+    entity: { type: String, required: true },
+    chemTransDb: { type: Number, required: true },
   },
   data() {
     return {
