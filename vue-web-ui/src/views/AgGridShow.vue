@@ -29,6 +29,7 @@
       class="ag-theme-alpine"
       rowSelection="multiple"
       enableCellTextSelection="true"
+      rowHeight="100"
       :columnDefs="columnDefs"
       :rowData="query"
       @click="rowSelected()"
@@ -50,8 +51,8 @@ export default {
     return {
       query: null,
       columnDefs: [],
-      chemTransApiUrl: '',
-      dssToxApiUrl: 'http://127.0.0.1:5001/api',
+      chemTransApiUrl: 'http://127.0.0.1:5000/api',
+      dssToxApiUrl: 'http://127.0.0.1:5000/api',
       gridApi: null,
       columnApi: null,
       anyRowSelected: false,
@@ -60,8 +61,20 @@ export default {
         'id', 'fk_substance_relationship_id', 'fk_generic_substance_id_predecessor',
         'fk_generic_substance_id_successor', 'fk_substance_relationship_type_id',
         'created_by', 'updated_by', 'created_at', 'updated_at', 'fk_qc_level_id',
-        'qc_notes_private', 'uri', 
-        ]
+        'qc_notes_private', 'uri',
+        ],
+      transView: [
+        "predecessor_dsstox_id", "predecessor_preferred_name", "predecessor_structure",
+        "predecessor_casrn","predecessor_type", "predecessor_qc_level",
+        "successor_dsstox_id", "successor_preferred_name", "successor_structure",
+        "successor_casrn", "successor_type", "successor_qc_level",
+        "relationship", "pH", "pH_min", "pH_max", 
+        "half_life", "half_life_min", "half_life_max", "half_life_units",
+        "rate", "rate_min", "rate_max", "rate_units", "activation_kcal_per_mol",
+        "temp_C", "reaction", "comments", "authors", "year", "month", "day",
+        "publisher", "title", "journal", "volume", 
+        "issue", "pages", "doi", "url", "pdf", "string"
+      ]
     }
   },
   components: { AgGridVue },
@@ -69,6 +82,11 @@ export default {
     convertName(name) {
       return name.replaceAll('_', ' ')
         .replaceAll(/\b\w/g, char => char.toUpperCase())
+    },
+    hideColumn(columnName) {
+      if (this.hiddenColumns.includes(columnName) || columnName.includes('smiles')) {
+        return true
+      } else { return false }
     },
     onGridReady(params) {
       this.gridApi = params.api
@@ -90,16 +108,81 @@ export default {
       }
     },
     pushColumnDef(columnName, checkboxOption) {
-      this.columnDefs.push({ 
-        field: columnName,
-        filter: true,
-        floatingFilter: true,
-        sortable: true, 
-        resizable: true,
-        checkboxSelection: checkboxOption,
-        enableCellTextSelection: true,
-        hide: this.hiddenColumns.includes(columnName)
-      })
+      if (columnName.includes('dsstox')) {
+        this.columnDefs.push({ 
+          headerName: this.convertName(columnName),
+          field: columnName,
+          filter: true,
+          floatingFilter: true,
+          sortable: true, 
+          resizable: true,
+          checkboxSelection: checkboxOption,
+          enableCellTextSelection: true,
+          cellRenderer: function(params) {
+            if (params.value != null){
+              return (
+                `<a 
+                class="dsstox-link" 
+                href="https://comptox-prod.epa.gov/dashboard/${params.value}">
+                  ${params.value}
+                </a>`
+              )
+            } else { return params.value }
+          }
+        })
+        this.columnDefs.push({
+          headerName: (
+            columnName.charAt(0).toUpperCase() 
+            + columnName.slice(1, columnName.indexOf('_')) 
+            + ' Structure'
+            ),
+          field: (
+            columnName.charAt(0) 
+            + columnName.slice(1, columnName.indexOf('_')) 
+            + '_structure'
+            ),
+          cellRenderer: function(params) {
+            if (params.data[columnName] != null) {
+              return (
+                `<a href="https://ccte-api-ccd.epa.gov/ccdapp1/chemical-files/image/by-dtxsid/${params.data[columnName]}">
+                  <img 
+                    class="structure-png"
+                    src="https://ccte-api-ccd.epa.gov/ccdapp1/chemical-files/image/by-dtxsid/${params.data[columnName]}"
+                  />
+                </a>`
+              )
+            }
+          }
+        })
+      } else {
+        this.columnDefs.push({
+          headerName: this.convertName(columnName),
+          field: columnName,
+          filter: true,
+          floatingFilter: true,
+          sortable: true, 
+          resizable: true,
+          checkboxSelection: checkboxOption,
+          enableCellTextSelection: true,
+          hide: this.hideColumn(columnName)
+        })
+      }
+    },
+    orderViewCols() {
+      const newColumnDefs = new Array(this.transView.length)
+      this.columnDefs.forEach(
+        (columnObject, oldIndex) => {
+          const newIndex = this.transView.indexOf(columnObject.field)
+          if (oldIndex === 0) {
+            columnObject.checkboxSelection = false
+          }
+          if (newIndex === 0) {
+            columnObject.checkboxSelection = true
+          }
+          newColumnDefs[newIndex] = columnObject
+        }
+      )
+      this.columnDefs = newColumnDefs
     },
     getColumnDefs() {
       Object.keys(this.query[0]).forEach(
@@ -111,6 +194,9 @@ export default {
           }
         }
       )
+      if (this.entity === 'transformation_view') {
+        this.orderViewCols()
+      }
     },
     async getRequest(apiUrl) {
       const response = await fetch(`${apiUrl}/${this.entity}`)
@@ -186,5 +272,13 @@ export default {
   font-weight: bold;
   color: black;
   font-size: 20px;
+}
+a.dsstox-link {
+  color: darkblue;
+  text-decoration: underline;
+}
+img.structure-png {
+  width: 97px;
+  vertical-align: middle;
 }
 </style>

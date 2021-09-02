@@ -16,7 +16,10 @@
       </button>
       <div class="options-panel" v-if="displayOptionsBool">
         <div v-for="entity in entitySelection" :key="entity.id">
-          <div class="option">
+          <div 
+            class="option" 
+            :class="{ transview: entity.name === 'transformation_view' }"
+          >
             <input
               type="checkbox" 
               v-model="checked[entity.id]"
@@ -62,15 +65,15 @@ export default {
   data() {
     return {
       entitySelection: [
-        {id: 0, name: 'compounds', chemTransDb: 0},
+        {id: 0, name: 'transformation_view', chemTransDb: 1},
         {id: 1, name: 'generic_substances', chemTransDb: 0},
-        {id: 2, name: 'substance_relationships', chemTransDb: 0},
-        {id: 3, name: 'substance_relationship_types', chemTransDb: 0},
-        {id: 4, name: 'qc_levels', chemTransDb: 0},
-        {id: 5, name: 'author', chemTransDb: 1},
-        {id: 6, name: 'citation', chemTransDb: 1},
-        {id: 7, name: 'kinetics', chemTransDb: 1},
-        {id: 8, name: 'transformation_view', chemTransDb: 1}
+        {id: 2, name: 'qc_levels', chemTransDb: 0},
+        {id: 3, name: 'substance_relationships', chemTransDb: 0},
+        {id: 4, name: 'substance_relationship_types', chemTransDb: 0},
+        {id: 5, name: 'compounds', chemTransDb: 0},
+        {id: 6, name: 'author', chemTransDb: 1},
+        {id: 7, name: 'citation', chemTransDb: 1},
+        {id: 8, name: 'kinetics', chemTransDb: 1}
       ],
       checked: [false, false, false, false, false, false, false, false],
       displayOptionsBool: false,
@@ -167,5 +170,8 @@ button.selection-bar .caret {
 .disabled {
   opacity: 0.5;
   pointer-events: none;
+}
+.transview {
+  text-decoration: underline;
 }
 </style>
