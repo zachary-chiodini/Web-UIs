@@ -1,11 +1,17 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "@/views/Home.vue";
+import SwaggerShow from "@/views/SwaggerShow.vue"
 
 const routes = [
   {
     path: "/",
     name: "Home",
     component: Home
+  },
+  {
+    path: '/swagger',
+    name: "SwaggerShow",
+    component: SwaggerShow
   },
   {
     path: "/search",

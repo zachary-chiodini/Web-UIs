@@ -4,6 +4,10 @@
       Home
     </router-link>
     |
+    <router-link :to="{name: 'SwaggerShow'}">
+      Swagger API Doc
+    </router-link>
+    |
     <router-link :to="{name: 'SearchShow'}">
       Search
     </router-link>

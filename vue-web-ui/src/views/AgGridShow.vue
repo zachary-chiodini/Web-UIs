@@ -1,39 +1,45 @@
 <template>
-  <div class='ag-grid'>
+  <div class='grid-container'>
     <button 
+      class="grid-button"
       v-if="!allRowsSelected"
       @click="selectAllRows(); rowSelected();"
     >
       Select All Rows
     </button>
-    <button 
+    <button
+      class="grid-button"
       v-if="allRowsSelected"
       @click="deselectAllRows(); rowSelected();"
     >
       Deselect All Rows
     </button>
     <button
+      class="grid-button"
       :disabled="!anyRowSelected"
       @click="exportExcel()"
     >
       Export Selected Row(s)
     </button>
+    <div class="grid-title">
+      {{ convertName(entity) }} Table
+    </div>
     <ag-grid-vue
-      id='grid'
       style="height: 55vh;"
       class="ag-theme-alpine"
       rowSelection="multiple"
+      enableCellTextSelection="true"
       :columnDefs="columnDefs"
       :rowData="query"
       @click="rowSelected()"
       @grid-ready="onGridReady">
     </ag-grid-vue>
-  </div>
+</div>
 </template>
 
 <script>
 import { AgGridVue } from "ag-grid-vue3";
-const ExcelJS = require('exceljs');
+import ExcelJS from 'exceljs';
 
 export default {
   props: {
@@ -47,14 +53,26 @@ export default {
       chemTransApiUrl: '',
       dssToxApiUrl: 'http://127.0.0.1:5001/api',
       gridApi: null,
+      columnApi: null,
       anyRowSelected: false,
-      allRowsSelected: false
+      allRowsSelected: false,
+      hiddenColumns: [
+        'id', 'fk_substance_relationship_id', 'fk_generic_substance_id_predecessor',
+        'fk_generic_substance_id_successor', 'fk_substance_relationship_type_id',
+        'created_by', 'updated_by', 'created_at', 'updated_at', 'fk_qc_level_id',
+        'qc_notes_private', 'uri', 
+        ]
     }
   },
   components: { AgGridVue },
   methods: {
+    convertName(name) {
+      return name.replaceAll('_', ' ')
+        .replaceAll(/\b\w/g, char => char.toUpperCase())
+    },
     onGridReady(params) {
       this.gridApi = params.api
+      this.columnApi = params.columnApi
     },
     selectAllRows() {
       this.gridApi.selectAll()
@@ -73,11 +91,14 @@ export default {
     },
     pushColumnDef(columnName, checkboxOption) {
       this.columnDefs.push({ 
-        field: columnName, 
-        sortable: true, 
-        filter: true, 
+        field: columnName,
+        filter: true,
         floatingFilter: true,
-        checkboxSelection: checkboxOption
+        sortable: true, 
+        resizable: true,
+        checkboxSelection: checkboxOption,
+        enableCellTextSelection: true,
+        hide: this.hiddenColumns.includes(columnName)
       })
     },
     getColumnDefs() {
@@ -150,14 +171,20 @@ export default {
 </script>
 
 <style>
-.ag-grid {
+.grid-container {
   padding-bottom: 20px;
   padding-left: 20px;
   padding-right: 20px;
 }
-.ag-grid button {
+.grid-button {
   font-size: 18px;
   margin-right: 20px;
   margin-bottom: 20px;
+}
+.grid-title {
+  display: inline-block;
+  font-weight: bold;
+  color: black;
+  font-size: 20px;
 }
 </style>
