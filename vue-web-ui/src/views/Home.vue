@@ -1,12 +1,21 @@
 <template>
   <the-header :title="'Home Page'"/>
-  <img class="database-schema" src="@/assets/databaseschema.png"/>
+  <the-entity-table
+    :schema="schemaData"
+  />
 </template>
 
 <script>
 import TheHeader from "@/components/TheHeader.vue"
+import TheEntityTable from "@/components/TheEntityTable.vue"
+import schemaSourceData from '@/assets/schema.json'
 
 export default {
-  components: { TheHeader }
+  components: { TheHeader, TheEntityTable },
+  data() {
+    return {
+      schemaData: schemaSourceData
+    }
+  }
 }
 </script>

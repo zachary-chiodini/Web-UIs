@@ -1,0 +1,17 @@
+[
+  { 
+    "id": 0, 
+    "name": "Table Name 1", 
+    "showColumnsBool": false,
+    "columns": [
+      { "id": 0, "name": "Attribute 1", "meta": "None 1" }
+    ]
+  },
+  { "id": 1, 
+    "name": "Table Name 2", 
+    "showColumnsBool": false, 
+    "columns": [
+    { "id": 0, "name": "Attribute 1", "meta": "None 1" }
+  ]
+}
+]
