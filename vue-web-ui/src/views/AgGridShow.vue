@@ -51,8 +51,8 @@ export default {
     return {
       query: null,
       columnDefs: [],
-      chemTransApiUrl: 'http://127.0.0.1:5000/api',
-      dssToxApiUrl: 'http://127.0.0.1:5000/api',
+      chemTransApiUrl: 'http://v2626umcth819.rtord.epa.gov:5011/api',
+      dssToxApiUrl: 'http://v2626umcth819.rtord.epa.gov:5011/api',
       gridApi: null,
       columnApi: null,
       anyRowSelected: false,
@@ -199,6 +199,7 @@ export default {
       }
     },
     async getRequest(apiUrl) {
+      await fetch(`${apiUrl}/connect`)
       const response = await fetch(`${apiUrl}/${this.entity}`)
       this.query = await response.json()
       this.getColumnDefs()
