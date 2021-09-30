@@ -1,6 +1,8 @@
 <template>
-  <the-header :title="'Chemical Transformation Database API'"/>
-  <div class="swagger" id="swagger"></div>
+  <div>
+    <the-header :title="'Chemical Transformation Database API'"/>
+    <div class="swagger" id="swagger"></div>
+  </div>
 </template>
 
 <script>
