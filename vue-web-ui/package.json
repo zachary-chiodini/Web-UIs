@@ -13,6 +13,7 @@
     "core-js": "^3.6.5",
     "exceljs": "^4.3.0",
     "integralui-web": "github:lidorsystems/integralui-web",
+    "raphael": "^2.3.0",
     "swagger-ui": "^3.52.0",
     "vue": "^3.0.0",
     "vue-class-component": "^8.0.0-rc.1",
