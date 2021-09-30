@@ -1,8 +1,10 @@
 <template>
-  <TheBanner/>
-  <TheNavigation/>
-  <div id="content-box">
-    <router-view></router-view>
+  <div>
+    <TheBanner/>
+    <TheNavigation/>
+    <div id="content-box">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
@@ -11,7 +13,7 @@ import TheBanner from "@/components/TheBanner.vue";
 import TheNavigation from "@/components/TheNavigation";
 
 export default {
-  components: { TheBanner, TheNavigation },
+  components: { TheBanner, TheNavigation }
 };
 </script>
 
