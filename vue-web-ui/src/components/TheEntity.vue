@@ -1,26 +1,28 @@
 <template>
-  <div class="draggable" v-for="entity in schema" :key="entity.id">
-    <table class="tab">
-      <tr>
-        <td colspan="2">
-          <div class="menu-icon">
-            <div></div>
-            <div></div>
-            <div></div>
-          </div>
-          <div class="table-name" @click="displayColumns(entity.id)">
-              {{ entity.name }}
-              <span v-if="showColumnsBools[entity.id]">&#9650;</span>
-              <span v-else>&#9660;</span>
-          </div>
-        </td>
-      </tr>
-      <div v-if="showColumnsBools[entity.id]">
-        <tr class="column" v-for="column in entity.columns" :key="column.id">
-          <td>{{ column.name }}</td><td>{{ column.meta }}</td>
+  <div>
+    <div class="draggable" v-for="entity in schema" :key="entity.id">
+      <table class="tab">
+        <tr>
+          <td colspan="2">
+            <div class="menu-icon">
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+            <div class="table-name" @click="displayColumns(entity.id)">
+                {{ entity.name }}
+                <span v-if="showColumnsBools[entity.id]">&#9650;</span>
+                <span v-else>&#9660;</span>
+            </div>
+          </td>
         </tr>
-      </div>
-    </table>
+        <div v-if="showColumnsBools[entity.id]">
+          <tr class="column" v-for="column in entity.columns" :key="column.id">
+            <td>{{ column.name }}</td><td>{{ column.meta }}</td>
+          </tr>
+        </div>
+      </table>
+    </div>
   </div>
 </template>
 

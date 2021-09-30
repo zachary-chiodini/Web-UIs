@@ -1,17 +1,17 @@
 <template>
   <the-header :title="'Home Page'"/>
-  <the-entity-table
+  <the-entity
     :schema="schemaData"
   />
 </template>
 
 <script>
 import TheHeader from "@/components/TheHeader.vue"
-import TheEntityTable from "@/components/TheEntityTable.vue"
+import TheEntity from "@/components/TheEntity.vue"
 import schemaSourceData from '@/assets/schema.json'
 
 export default {
-  components: { TheHeader, TheEntityTable },
+  components: { TheHeader, TheEntity },
   data() {
     return {
       schemaData: schemaSourceData
