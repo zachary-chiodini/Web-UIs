@@ -16,6 +16,10 @@
       Post
     </router-link>
     |
+    <router-link :to="{name: 'SchemaShow'}">
+      Schema
+    </router-link>
+    |
   </div>
 </template>
 

@@ -1,90 +1,42 @@
 <template>
-  <div>
-    <div class="draggable" v-for="entity in schema" :key="entity.id">
-      <table class="tab">
-        <tr>
-          <td colspan="2">
-            <div class="menu-icon">
-              <div></div>
-              <div></div>
-              <div></div>
-            </div>
-            <div class="table-name" @click="displayColumns(entity.id)">
-                {{ entity.name }}
-                <span v-if="showColumnsBools[entity.id]">&#9650;</span>
-                <span v-else>&#9660;</span>
-            </div>
-          </td>
-        </tr>
-        <div v-if="showColumnsBools[entity.id]">
-          <tr class="column" v-for="column in entity.columns" :key="column.id">
-            <td>{{ column.name }}</td><td>{{ column.meta }}</td>
-          </tr>
+  <table class="entity">
+    <tr>
+      <td colspan="2">
+        <div class="menu-icon">
+          <div></div>
+          <div></div>
+          <div></div>
         </div>
-      </table>
+        <div class="entity-name" @click="displayColumns()">
+            {{ entity.name }}
+            <span v-if="showColumnsBool">&#9650;</span>
+            <span v-else>&#9660;</span>
+        </div>
+      </td>
+    </tr>
+    <div v-if="showColumnsBool">
+      <tr class="entity-field" v-for="column in entity.columns" :key="column.id">
+        <td>{{ column.name }}</td><td>{{ column.meta }}</td>
+      </tr>
     </div>
-  </div>
+  </table>
 </template>
 
 <script>
 export default {
   props: {
-    schema: { type: Array, required: true }
+    entity: { type: Array, required: true },
+    position: { type: Array, required: true }
   },
   data() {
-    const showColumnsBools = new Array(this.schema.length)
-    for (let i = 0; i < this.schema.length; i++) {
-      showColumnsBools[i] = false
-    }
-    return { showColumnsBools }
+    return { showColumnsBool: false }
   },
   methods: {
-    displayColumns(entityId) {
-      if (this.showColumnsBools[entityId]) {
-        this.showColumnsBools[entityId] = false
+    displayColumns() {
+      if (this.showColumnsBool) {
+        this.showColumnsBool = false
       } else {
-        this.showColumnsBools[entityId] = true
-      }
-    }
-  },
-  mounted() {
-    // Make the DIV element draggable:
-    const draggableElements = document.getElementsByClassName("draggable");
-    for (const element of draggableElements) {
-      dragElement(element)
-    }
-    function dragElement(elmnt) {
-      var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-      elmnt.onmousedown = dragMouseDown;
-
-      function dragMouseDown(e) {
-        e = e || window.event;
-        e.preventDefault();
-        // get the mouse cursor position at startup:
-        pos3 = e.clientX;
-        pos4 = e.clientY;
-        document.onmouseup = closeDragElement;
-        // call a function whenever the cursor moves:
-        document.onmousemove = elementDrag;
-      }
-
-      function elementDrag(e) {
-        e = e || window.event;
-        e.preventDefault();
-        // calculate the new cursor position:
-        pos1 = pos3 - e.clientX;
-        pos2 = pos4 - e.clientY;
-        pos3 = e.clientX;
-        pos4 = e.clientY;
-        // set the element's new position:
-        elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-        elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
-      }
-
-      function closeDragElement() {
-        // stop moving when mouse button is released:
-        document.onmouseup = null;
-        document.onmousemove = null;
+        this.showColumnsBool = true
       }
     }
   }
@@ -92,12 +44,7 @@ export default {
 </script>
 
 <style>
-.draggable {
-  position: absolute;
-  cursor: move;
-}
-.tab {
-  margin: 0;
+.entity {
   border: 1px solid black;
   background-color: whitesmoke;
 }
@@ -113,18 +60,18 @@ export default {
   margin-top: 2px;
   border: 0;
 }
-.table-name {
+.entity-name {
   color: black;
   margin-left: 23px;
   text-align: center;
   cursor: pointer;
   padding: 5px;
 }
-.column {
+.entity-field {
   color: black;
   text-align: left;
 }
-.column td {
+.entity-field td {
   padding: 5px;
 }
 </style>

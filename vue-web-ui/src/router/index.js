@@ -42,6 +42,13 @@ const routes = [
     component: () => import(
       /*webpackChunkName: "post-view"*/ "@/views/PostShow.vue"
       )
+  },
+  {
+    path: '/schema',
+    name: 'SchemaShow',
+    component: () => import(
+      /*webpackChunkName: "schema-view"*/ "@/views/SchemaShow.vue"
+      )
   }
 ];
 
