@@ -1,7 +1,7 @@
 {
   "kinetics": {
     "showColumns": [
-      "pH_min", "pH_max", "pH", 
+      "uri", "pH_min", "pH_max", "pH", 
       "half_life_min", "half_life_max", "half_life", "half-life-units",
       "rate_min", "rate_max", "rate", "rate_units",
       "reaction", "temp_C", "activation_kcal_per_mol", "comments"
@@ -12,7 +12,7 @@
   },
   "substance_relationships": {
     "showColumns": [
-      "fk_generic_substance_id_predecessor", "fk_generic_substance_id_successor",
+      "uri", "fk_generic_substance_id_predecessor", "fk_generic_substance_id_successor",
       "relationship", "mixture_percentage", "percentage_type", 
       "source", "qc_notes"
     ],
@@ -24,7 +24,7 @@
   },
   "substance_relationship_types": {
     "showColumns": [
-      "name", "label_forward", "label_backward",
+      "uri", "name", "label_forward", "label_backward",
       "short_description_forward", "short_description_backward",
       "long_description_forward", "long_description_backward"
     ],
@@ -34,7 +34,7 @@
   },
   "compounds": {
     "showColumns": [
-      "dsstox_compound_id", "acd_iupac_name", "mol_formula",
+      "uri", "dsstox_compound_id", "acd_iupac_name", "mol_formula",
       "chemical_type", "chiral_stereo", "organic_form",
       "mol_weight", "monoisotopic mass",
       "fragment_count", "radical count"
@@ -48,7 +48,7 @@
   },
   "generic_substances": {
     "showColumns": [
-      "dsstox_substance_id", "preferred_name", "casrn",
+      "uri", "dsstox_substance_id", "preferred_name", "casrn",
       "substance_type", "qc_notes", "source"
     ],
     "hideColumns": [
@@ -58,7 +58,7 @@
   },
   "qc_levels": {
     "showColumns": [
-      "name", "label", "description"
+      "uri", "name", "label", "description"
     ],
     "hideColumns": [
       "id", "created_by", "created_at", "updated_by", "updated_at"
@@ -66,13 +66,13 @@
   },
   "author": {
     "showColumns": [
-      "first_name", "middle_name", "last_name"
+      "uri", "first_name", "middle_name", "last_name"
     ],
     "hideColumns": ["id"]
   },
   "citation" : {
     "showColumns": [
-      "doi", "url", "year", "month", "day", "publisher", "volume",
+      "uri", "doi", "url", "year", "month", "day", "publisher", "volume",
       "issue", "pages", "title", "journal", "pdf"
     ],
     "hideColumns": ["id"]

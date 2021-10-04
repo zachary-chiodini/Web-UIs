@@ -1,5 +1,8 @@
 <template>
   <div class='grid-container'>
+    <div class="grid-title">
+      {{ convertName(entity) }} Table
+    </div>
     <button 
       class="grid-button"
       v-if="!allRowsSelected"
@@ -21,11 +24,8 @@
     >
       Export Selected Row(s)
     </button>
-    <div class="grid-title">
-      {{ convertName(entity) }} Table
-    </div>
     <ag-grid-vue
-      style="height: 55vh;"
+      style="height: 52vh;"
       class="ag-theme-alpine"
       rowSelection="multiple"
       enableCellTextSelection="true"
@@ -35,26 +35,27 @@
       @click="rowSelected()"
       @grid-ready="onGridReady">
     </ag-grid-vue>
-</div>
+  </div>
 </template>
 
 <script>
 import { AgGridVue } from "ag-grid-vue3";
 import ExcelJS from 'exceljs';
+import columnSourceData from '@/assets/columndata.json'
 
 export default {
   props: {
     entity: { type: String, required: true },
-    showColumns: { type: Array, required: true },
-    hideColumns: { type: Array, required: true },
     chemTransDb: { type: Number, required: true }
   },
   data() {
     return {
       query: null,
       columnDefs: [],
-      chemTransApiUrl: 'http://v2626umcth819.rtord.epa.gov:5011/api',
-      dssToxApiUrl: 'http://v2626umcth819.rtord.epa.gov:5011/api',
+      showColumns: null,
+      hideColumns: null,
+      chemTransApiUrl: 'http://127.0.0.1:5000/api', //'http://v2626umcth819.rtord.epa.gov:5011/api',
+      dssToxApiUrl: 'http://127.0.0.1:5000/api', //'http://v2626umcth819.rtord.epa.gov:5011/api',
       gridApi: null,
       columnApi: null,
       anyRowSelected: false,
@@ -86,7 +87,7 @@ export default {
         this.anyRowSelected = true
       }
     },
-    hyperlinkColumnDef(columnName) {
+    hyperlinkColumnDef(columnName, checkboxBool) {
       this.columnDefs.push({ 
         headerName: this.convertName(columnName),
         field: columnName,
@@ -95,6 +96,7 @@ export default {
         sortable: true, 
         resizable: true,
         enableCellTextSelection: true,
+        checkboxSelection: checkboxBool,
         cellRenderer: function(params) {
           if (params.value != null){
             return (
@@ -134,11 +136,11 @@ export default {
         }
       })
     },
-    dssToxColumnDef(columnName) {
-      this.hyperlinkColumnDef(columnName)
+    dssToxColumnDef(columnName, checkboxBool) {
+      this.hyperlinkColumnDef(columnName, checkboxBool)
       this.imageColumnDef(columnName)
     },
-    normColumnDef(columnName, hide) {
+    normColumnDef(columnName, hide, checkboxBool) {
       this.columnDefs.push({
         headerName: this.convertName(columnName),
         field: columnName,
@@ -147,19 +149,20 @@ export default {
         sortable: true, 
         resizable: true,
         enableCellTextSelection: true,
+        checkboxSelection: checkboxBool,
         hide: hide
       })
     },
-    pushColumnDef(columnName, hide) {
+    pushColumnDef(columnName, hide, checkboxBool) {
       if (columnName.includes('dsstox')) {
-        this.dssToxColumnDef(columnName)
+        this.dssToxColumnDef(columnName, checkboxBool)
       } else {
-        this.normColumnDef(columnName, hide)
+        this.normColumnDef(columnName, hide, checkboxBool)
       }
     },
     pushUriColumnDef(columnName) {
       this.columnDefs.push({
-        headerName: this.convertName(columnName),
+        headerName: "URI",
         field: columnName,
         filter: true,
         floatingFilter: true,
@@ -171,7 +174,7 @@ export default {
           if (params.value != null){
             return (
               `<a class="grid-link" href="${params.value}">
-                URI-${params.value.slice(-1)}
+                ${params.value}
               </a>`
             )
           } else { return params.value }
@@ -179,12 +182,23 @@ export default {
       })
     },
     getColumnDefs() {
-      this.pushUriColumnDef('URI')
-      for (const columnName of this.showColumns) {
-        this.pushColumnDef(columnName, false)
-      }
+      this.showColumns = columnSourceData[this.entity]["showColumns"]
+      this.hideColumns = columnSourceData[this.entity]["hideColumns"]
+      this.showColumns.forEach(
+        (columnName, index) => {
+          if (index == 0) {
+            if (this.showColumns[index] == 'uri') {
+              this.pushUriColumnDef('uri')
+            } else {
+              this.pushColumnDef(columnName, false, true)
+            }
+          } else {
+            this.pushColumnDef(columnName, false, false)
+          }
+        }
+      )
       for (const columnName of this.hideColumns) {
-        this.pushColumnDef(columnName, true)
+        this.pushColumnDef(columnName, true, false)
       }
     },
     async getRequest(apiUrl) {
@@ -258,10 +272,9 @@ export default {
   margin-bottom: 20px;
 }
 .grid-title {
-  display: inline-block;
-  font-weight: bold;
+  text-align: center;
   color: black;
-  font-size: 20px;
+  font-size: 25px;
 }
 a.grid-link {
   color: darkblue;

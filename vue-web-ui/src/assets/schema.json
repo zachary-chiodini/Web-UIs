@@ -1,17 +1,50 @@
 [
   { 
-    "id": 0, 
-    "name": "Table Name 1", 
-    "showColumnsBool": false,
+    "name": "Kinetics", 
+    "relationship" : [
+      { "index" :  1, "type": "many-to-one"}
+    ],
     "columns": [
-      { "id": 0, "name": "Attribute 1", "meta": "None 1" }
+      { "name": "id", "type": "int(11)", "indexes": "Primary" },
+      { "name": "fk_substance_relationship_id", "indexes": "substance_relationships.id" },
+      { "name": "pH_min", "type": "float", "indexes": "" },
+      { "name": "pH_max", "type": "float", "indexes": "" },
+      { "name": "pH", "type": "float", "indexes": "" },
+      { "name": "half_life_min", "type": "float", "indexes": "" },
+      { "name": "half_life_max", "type": "float", "indexes": "" },
+      { "name": "half_life", "type": "float", "indexes": "" },
+      { "name": "half_life_units", "type": "varchar(50)", "indexes": "" },
+      { "name": "rate_min", "type": "double", "indexes": "" },
+      { "name": "rate_max", "type": "double", "indexes": "" },
+      { "name": "rate", "type": "double", "indexes": "" },
+      { "name": "rate_units", "type": "varchar(30)", "indexes": "" },
+      { "name": "reaction", "type": "varchar(100)", "indexes": "" },
+      { "name": "temp_C", "type": "float", "indexes": "" },
+      { "name": "activation_kcal_per_mol", "type": "float", "indexes": "" },
+      { "name": "comments", "type": "varchar(1500)", "indexes": "" }
     ]
   },
-  { "id": 1, 
-    "name": "Table Name 2", 
-    "showColumnsBool": false, 
+  {
+    "name": "Substance Relationships",
+    "relationship" : [
+      { "index" :  0, "type": "one-to-many"}
+    ],
     "columns": [
-    { "id": 0, "name": "Attribute 1", "meta": "None 1" }
+      { "name": "id", "type": "int(11)", "indexes": "Primary" },
+      { "name": "fk_generic_substance_id_predecessor", "type": "int(11)", "indexes": "generic_substances.id" },
+      { "name": "fk_generic_substance_id_successor", "type": "int(11)", "indexes": "generic_substances.id" },
+      { "name": "relationship", "type": "varchar(255)", "indexes": "" },
+      { "name": "fk_substance_relationship_type_id", "type": "int(11)", "indexes": "relationship_types.id" },
+      { "name": "source", "type": "varchar(255)", "indexes": "" },
+      { "name": "qc_notes", "type": "varchar(1024)", "indexes": "" },
+      { "name": "mixture_percentage", "type": "decimal(10,0)", "indexes": "" },
+      { "name": "percentage_type", "type": "varchar(255)", "indexes": "" },
+      { "name": "is_nearest_structure", "type": "tinyint(1)", "indexes": "" },
+      { "name": "is_nearest_casrn", "type": "tinyint(1)", "indexes": "" },
+      { "name": "created_by", "type": "varchar(255)", "indexes": "" },
+      { "name": "updated_by", "type": "varchar(255)", "indexes": "" },
+      { "name": "created_at", "type": "datetime", "indexes": "" },
+      { "name": "updated_at", "type": "datetime", "indexes": "" }
   ]
 }
 ]

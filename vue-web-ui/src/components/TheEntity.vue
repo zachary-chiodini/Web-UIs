@@ -1,7 +1,7 @@
 <template>
-  <table class="entity">
+  <table class="entity" :style="`left: ${position[0]}px; top: ${position[1]}px`">
     <tr>
-      <td colspan="2">
+      <td :colspan="entity.columns.length">
         <div class="menu-icon">
           <div></div>
           <div></div>
@@ -9,14 +9,28 @@
         </div>
         <div class="entity-name" @click="displayColumns()">
             {{ entity.name }}
-            <span v-if="showColumnsBool">&#9650;</span>
-            <span v-else>&#9660;</span>
+            <span class="caret" v-if="showColumnsBool">&#9650;</span>
+            <span class="caret" v-else>&#9660;</span>
         </div>
       </td>
     </tr>
     <div v-if="showColumnsBool">
-      <tr class="entity-field" v-for="column in entity.columns" :key="column.id">
-        <td>{{ column.name }}</td><td>{{ column.meta }}</td>
+      <tr class="entity-field">
+        <td></td>
+        <td v-for="(field, index) in Object.keys(entity.columns[0])" :key="index">
+          {{ field }}
+        </td>
+      </tr>
+      <tr>
+        <td :colspan="entity.columns.length">
+          <hr style="border: 0; border-bottom: 1px solid black; margin: 0">
+        </td>
+      </tr>
+      <tr class="entity-field" v-for="(column, colIndex) in entity.columns" :key="colIndex">
+        <td style="text-align: right">{{ `${colIndex}.` }}</td>
+        <td v-for="(value, index) in Object.values(column)" :key="index">
+          {{ value }}
+        </td>
       </tr>
     </div>
   </table>
@@ -25,7 +39,7 @@
 <script>
 export default {
   props: {
-    entity: { type: Array, required: true },
+    entity: { type: Object, required: true },
     position: { type: Array, required: true }
   },
   data() {
@@ -67,9 +81,13 @@ export default {
   cursor: pointer;
   padding: 5px;
 }
+.caret {
+  float: right;
+}
 .entity-field {
   color: black;
   text-align: left;
+  font-size: 15px;
 }
 .entity-field td {
   padding: 5px;
