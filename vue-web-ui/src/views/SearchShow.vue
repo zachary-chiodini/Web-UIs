@@ -21,10 +21,13 @@
             :class="{ transview: entity.name === 'transformation_view' }"
           >
             <input
-              type="checkbox" 
+              type="checkbox"
               v-model="checked[entity.id]"
-              >
-            <label>{{ convertName(entity.name) }}</label>
+              :disabled="entityChecked() && !checked[entity.id]"
+            >
+            <label :class="{ disabled: entityChecked() && !checked[entity.id] }">
+              {{ convertName(entity.name) }}
+            </label>
           </div>
         </div>
         <div class="close-or-execute">
