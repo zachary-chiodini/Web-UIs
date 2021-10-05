@@ -7,12 +7,10 @@
     <div id="relationships">
       <svg>
         <path :d="getBezierPath(points)" />
-        <!--
-        <rect :x="calcBezierPointX(points, 0.2, -5)" :y="calcBezierPointY(points, 0.2, -15)" />
-        <text :x="calcBezierPointX(points, 0.2, 0)" :y="calcBezierPointY(points, 0.2, 0)">N</text>
-        <rect :x="calcBezierPointX(points, 0.8, -5)" :y="calcBezierPointY(points, 0.8, -15)" />
-        <text :x="calcBezierPointX(points, 0.8, 0)" :y="calcBezierPointY(points, 0.8, 0)">1</text>
-        -->
+        <rect :x="getBezierPointX(points, 0.2, -5)" :y="getBezierPointY(points, 0.2, -15)" />
+        <text :x="getBezierPointX(points, 0.2, 0)" :y="getBezierPointY(points, 0.2, 0)">N</text>
+        <rect :x="getBezierPointX(points, 0.8, -5)" :y="getBezierPointY(points, 0.8, -15)" />
+        <text :x="getBezierPointX(points, 0.8, 0)" :y="getBezierPointY(points, 0.8, 0)">1</text>
       </svg>
     </div>
   </div>
@@ -29,11 +27,9 @@ export default {
     return { 
       schema: sourceSchemaData,
       relationships: null,
-      initPoints: [
-        { anchor: "left", point: [200, 200] }, 
-        { anchor: "left", point: [400, 400] }
-        ],
-      points: [[230, 50], [430, 250]]
+      initPoints: [[200, 200], [400, 400]],
+      points: [[230, 50], [430, 250]],
+      anchorSides: ['bottom', 'top']
     }
   },
   methods: {
@@ -45,9 +41,9 @@ export default {
     },
     vectorAngle(r) {
       const p1 = r[0], p2 = r[1]
-      const x = p2[0] - p1[0]
-      const y = p1[1] - p2[1]
-      const angle = 180*Math.atan2(y, x)/Math.PI
+      const dx = p2[0] - p1[0]
+      const dy = p1[1] - p2[1]
+      const angle = 180*Math.atan2(dy, dx)/Math.PI
       if (angle < 0) {
         return 360 + angle
       } else {
@@ -58,54 +54,61 @@ export default {
       const x1 = r[0][0], x2 = r[1][0]
       const y1 = r[0][1], y2 = r[1][1]
       const dx = x2 - x1, dy = y2 - y1
-      const angle = this.vectorAngle(r)
-      // upward
-      if (45 < angle && angle <= 135) {
+      if ((this.anchorSides[0] == "bottom") || this.anchorSides[0] == "top") {
         const c1 = this.getControlPoint(y1, dy, 0.5)
         const c2 = this.getControlPoint(y2, -dy, 0.5)
         return `M${x1}, ${y1} C${x1}, ${c1} ${x2}, ${c2} ${x2}, ${y2}`
-      // downward
-      } else if (225 <= angle && angle <= 315) {
-        const c1 = this.getControlPoint(y1, dy, 0.5)
-        const c2 = this.getControlPoint(y2, -dy, 0.5)
-        return `M${x1}, ${y1} C${x1}, ${c1} ${x2}, ${c2} ${x2}, ${y2}`
-      // left and rightward
       } else {
         const c1 = this.getControlPoint(x1, dx, 0.5)
         return `M${x1}, ${y1} C${c1}, ${y1} ${c1}, ${y2} ${x2}, ${y2}`
       }
     },
-    calcBezierPointX(r, t, d) {
+    getBezierPointX(r, t, d) {
       const x1 = r[0][0], x2 = r[1][0]
       const dx = x2 - x1
-      const c1 = this.getControlPoint(x1, dx, 0.5)
-      return this.bezierCurve(x1, c1, c1, x2, t) + d
+      if ((this.anchorSides[0] == "bottom") || this.anchorSides[0] == "top") {
+        return this.bezierCurve(x1, x1, x2, x2, t) + d
+      } else {
+        const c1 = this.getControlPoint(x1, dx, 0.5)
+        return this.bezierCurve(x1, c1, c1, x2, t) + d
+      }
     },
-    calcBezierPointY(r, t, d) {
+    getBezierPointY(r, t, d) {
       const y1 = r[0][1], y2 = r[1][1]
-      return this.bezierCurve(y1, y1, y2, y2, t) + d
+      const dy = y2 - y1
+      if ((this.anchorSides[0] == "bottom") || this.anchorSides[0] == "top") {
+        const c1 = this.getControlPoint(y1, dy, 0.5)
+        const c2 = this.getControlPoint(y2, -dy, 0.5)
+        return this.bezierCurve(y1, c1, c2, y2, t) + d
+      } else {
+        return this.bezierCurve(y1, y1, y2, y2, t) + d
+      }
     },
-    getAnchorPoint(elmnt, angle) {
+    getAnchorPoint(elmnt, angle, index) {
       // rightward
-      if ((0 <= angle && angle <= 45) || (315 <= angle && angle <= 360)) {
+      if ((0 < angle && angle < 45) || (315 < angle && angle < 360)) {
+        this.anchorSides[index] = "right"
         return [ 
           elmnt.offsetLeft + elmnt.offsetWidth - 40,
           elmnt.offsetTop + elmnt.offsetHeight/2 - 170
         ]
       // upward
-      } else if (45 < angle && angle <= 135) {
+      } else if (45 < angle && angle < 135) {
+        this.anchorSides[index] = "top"
         return [
           elmnt.offsetLeft + elmnt.offsetWidth/2 - 40,
           elmnt.offsetTop - 170
         ]
       // leftward
-      } else if (135 < angle && angle <= 225) {
+      } else if (135 < angle && angle < 225) {
+        this.anchorSides[index] = "left"
         return [
           elmnt.offsetLeft - 40,
           elmnt.offsetTop + elmnt.offsetHeight/2 - 170
         ]
       // downward
       } else {
+        this.anchorSides[index] = "bottom"
         return [
           elmnt.offsetLeft + elmnt.offsetWidth/2 - 40,
           elmnt.offsetTop + elmnt.offsetHeight - 170
@@ -157,13 +160,15 @@ export default {
           elmnt.style.left = (new_left_pos) + "px";
           // need to iterate over all endpoints 
           const end_points = [
-            [elmnt.offsetLeft + elmnt.offsetWidth/2 - 40, elmnt.offsetTop + elmnt.offsetHeight/2 - 170],
-            points_ref[rIdx]
+            [elmnt.offsetLeft + elmnt.offsetWidth/2 - 40, 
+              elmnt.offsetTop + elmnt.offsetHeight/2 - 170],
+            [rElmnt.offsetLeft + rElmnt.offsetWidth/2 - 40, 
+              rElmnt.offsetTop + rElmnt.offsetHeight/2 - 170]
           ]
           const angle = vect_angle_ref(end_points)
-          points_ref[idx] = get_anchor_ref(elmnt, angle)
+          points_ref[idx] = get_anchor_ref(elmnt, angle, idx)
           const rAngle = 180 < angle ? angle - 180 : angle + 180
-          points_ref[rIdx] = get_anchor_ref(rElmnt, rAngle)
+          points_ref[rIdx] = get_anchor_ref(rElmnt, rAngle, rIdx)
         }
 
         function updateInitPosition() {
