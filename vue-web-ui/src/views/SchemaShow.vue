@@ -209,7 +209,7 @@ path {
   stroke-width: 1;
 }
 rect {
-  fill: white;
+  fill: #FFFAFA;
   width: 20px;
   height: 20px;
 }

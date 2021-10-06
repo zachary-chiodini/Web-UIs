@@ -1,5 +1,9 @@
 <template>
-  <table class="entity" :style="`left: ${position[0]}px; top: ${position[1]}px`">
+  <table 
+    class="entity" 
+    :style="`left: ${position[0]}px; top: ${position[1]}px`"
+    :class="{ top: showColumnsBool }"
+  >
     <tr>
       <td :colspan="entity.columns.length">
         <div class="menu-icon">
@@ -61,6 +65,11 @@ export default {
 .entity {
   border: 1px solid black;
   background-color: whitesmoke;
+}
+.top {
+  border: 1px solid black;
+  background-color: whitesmoke;
+  z-index: 10;
 }
 .menu-icon {
   position: absolute;
