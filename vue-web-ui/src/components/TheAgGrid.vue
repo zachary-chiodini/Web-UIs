@@ -29,6 +29,7 @@
       class="ag-theme-alpine"
       rowSelection="multiple"
       enableCellTextSelection="true"
+      ensureDomOrder=true
       rowHeight="100"
       :columnDefs="columnDefs"
       :rowData="query"
@@ -54,8 +55,8 @@ export default {
       columnDefs: [],
       showColumns: null,
       hideColumns: null,
-      chemTransApiUrl: 'http://v2626umcth819.rtord.epa.gov:5011/api',
-      dssToxApiUrl: 'http://v2626umcth819.rtord.epa.gov:5011/api',
+      chemTransApiUrl: 'http://127.0.0.1:5000/api', //'http://v2626umcth819.rtord.epa.gov:5011/api',
+      dssToxApiUrl: 'http://127.0.0.1:5000/api', //'http://v2626umcth819.rtord.epa.gov:5011/api',
       gridApi: null,
       columnApi: null,
       anyRowSelected: false,
@@ -95,7 +96,6 @@ export default {
         floatingFilter: true,
         sortable: true, 
         resizable: true,
-        enableCellTextSelection: true,
         checkboxSelection: checkboxBool,
         cellRenderer: function(params) {
           if (params.value != null){
@@ -148,7 +148,6 @@ export default {
         floatingFilter: true,
         sortable: true, 
         resizable: true,
-        enableCellTextSelection: true,
         checkboxSelection: checkboxBool,
         hide: hide
       })
@@ -169,7 +168,6 @@ export default {
         sortable: true, 
         resizable: true,
         checkboxSelection: true,
-        enableCellTextSelection: true,
         cellRenderer: function(params) {
           if (params.value != null){
             return (

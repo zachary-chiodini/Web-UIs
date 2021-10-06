@@ -1,20 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Home from "@/views/Home.vue";
-import SwaggerShow from "@/views/SwaggerShow.vue"
 
 const routes = [
   {
     path: "/",
-    name: "Home",
-    component: Home
-  },
-  {
-    path: '/swagger',
-    name: "SwaggerShow",
-    component: SwaggerShow
-  },
-  {
-    path: "/search",
     name: "SearchShow",
     component: () => import(
       /*webpackChunkName: "search-view"*/ "@/views/SearchShow.vue"
@@ -37,10 +25,17 @@ const routes = [
     ]
   },
   {
-    path: "/post",
-    name: "PostShow",
+    path: "/upload",
+    name: "UploadShow",
     component: () => import(
-      /*webpackChunkName: "post-view"*/ "@/views/PostShow.vue"
+      /*webpackChunkName: "upload-view"*/ "@/views/UploadShow.vue"
+      )
+  },
+  {
+    path: '/swagger',
+    name: "SwaggerShow",
+    component: () => import(
+      /*webpackChunkName: "swagger-view"*/ "@/views/SwaggerShow.vue"
       )
   },
   {

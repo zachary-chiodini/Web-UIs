@@ -20,6 +20,7 @@
         class="ag-theme-alpine"
         rowSelection="multiple"
         enableCellTextSelection="true"
+        ensureDomOrder=true
         rowHeight="50"
         :columnDefs="columnDefs"
         :rowData="rowData"
@@ -49,7 +50,7 @@ export default {
   methods: {
     getAuthors(document) {
       let result = ''
-      for (const author in document["author"]) {
+      for (const author of document["author"]) {
         result += `${author["given"]} ${author["family"]}, `
       }
       return result.slice(0, -2)
@@ -59,7 +60,6 @@ export default {
         headerName: columnName,
         field: columnName,
         resizable: true,
-        enableCellTextSelection: true,
         checkboxSelection: checkboxBool,
         editable: true
       })
@@ -69,7 +69,6 @@ export default {
         headerName: "URL",
         field: "URL",
         resizable: true,
-        enableCellTextSelection: true,
         editable: true,
         cellRenderer: function(params) {
           if (params.value != null){
@@ -93,7 +92,6 @@ export default {
           headerName: "Status",
           field: "Status",
           resizable: true,
-          enableCellTextSelection: true,
         }]
         this.rowData = [{"Status": "Failed"}]
       } else {
@@ -108,10 +106,9 @@ export default {
             }
           }
         )
-        const rowData = []
-        const documentArray = jsonData["message"]["items"]
-        for (const document of documentArray) {
-          rowData.push({
+        this.rowData = []
+        for (const document of jsonData["message"]["items"]) {
+          this.rowData.push({
             "DOI": Object.keys(document).includes("DOI") ? document["DOI"] : "", 
             "URL": Object.keys(document).includes("URL") ? document["URL"] : "", 
             "Year": Object.keys(document).includes("date-part") ? document["date-part"][0] : "", 
@@ -127,7 +124,6 @@ export default {
             "Short": Object.keys(document).includes("short-container-title") ? document["short-container-title"].join(", ") : ""
           })
         }
-        this.rowData = rowData
       }
     }
   }
@@ -136,7 +132,7 @@ export default {
 
 <style>
 input.search {
-  width: 80%;
+  width: 50%;
   font-size: 18px;
   border: 1px solid black;
   background-image: url('../assets/writeicon.png');
