@@ -61,6 +61,7 @@ export default {
         resizable: true,
         enableCellTextSelection: true,
         checkboxSelection: checkboxBool,
+        editable: true
       })
     },
     pushURLColumnDef() {
@@ -69,6 +70,7 @@ export default {
         field: "URL",
         resizable: true,
         enableCellTextSelection: true,
+        editable: true,
         cellRenderer: function(params) {
           if (params.value != null){
             return (
