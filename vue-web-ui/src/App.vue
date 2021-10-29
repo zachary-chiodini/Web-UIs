@@ -9,8 +9,8 @@
 </template>
 
 <script>
-import TheBanner from "@/components/TheBanner.vue";
-import TheNavigation from "@/components/TheNavigation";
+import TheBanner from "@/components/TheHeader/TheBanner.vue";
+import TheNavigation from "@/components/TheHeader/TheNavigation";
 
 export default {
   components: { TheBanner, TheNavigation }

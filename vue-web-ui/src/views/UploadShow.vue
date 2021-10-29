@@ -1,7 +1,8 @@
 <template>
   <div>
-    <the-header :title="'Post to Database'"/>
+    <the-page-header :title="'Post to Database'"/>
     <the-cross-ref style="padding: 20px; text-align: left" />
+    <br/>
     <ag-grid-vue
       :style="`height: ${120 + (rowData.length - 1)*50}px; 
         padding-left: 20px; 
@@ -13,8 +14,7 @@
       ensureDomOrder=true
       :columnDefs="columnDefs"
       :rowData="rowData"
-      >
-    </ag-grid-vue>
+    />
     <div class="grid-buttons">
       <button @click="addRow()">
         Add Row
@@ -30,12 +30,12 @@
 </template>
 
 <script>
-import TheHeader from "@/components/TheHeader.vue";
+import ThePageHeader from "@/components/TheHeader/ThePageHeader.vue";
 import TheCrossRef from "@/components/TheCrossRef.vue";
 import { AgGridVue } from "ag-grid-vue3";
 
 export default {
-  components: { TheHeader, TheCrossRef, AgGridVue },
+  components: { ThePageHeader, TheCrossRef, AgGridVue },
   data() {
     return {
       rowData: [{
@@ -157,10 +157,10 @@ export default {
 <style>
 .grid-buttons {
   text-align: right;
-  padding-bottom: 20px
+  padding-bottom: 12px
 }
 .grid-buttons button {
-  font-size: 18px;
+  font-size: 12px;
   margin-right: 20px;
 }
 </style>

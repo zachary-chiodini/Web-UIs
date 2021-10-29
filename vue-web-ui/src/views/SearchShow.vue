@@ -1,180 +1,97 @@
 <template>
   <div>
-    <the-header :title="'Search Database'"/>
-    <section class="selection-panel">
-      <button 
-        class="selection-bar"
-        @click="displayOptionsPanel()"
-      >
-        Select the Database Entity or Entities to Query
-        <span class="caret" v-if="displayOptionsBool">
-          &#9650;
-        </span>
-        <span class="caret" v-else>
-          &#9660;
-        </span>
-      </button>
-      <div class="options-panel" v-if="displayOptionsBool">
-        <div v-for="entity in entitySelection" :key="entity.id">
-          <div 
-            class="option" 
-            :class="{ transview: entity.name === 'transformation_view' }"
-          >
-            <input
-              type="checkbox"
-              v-model="checked[entity.id]"
-              :disabled="entityChecked() && !checked[entity.id]"
-            >
-            <label :class="{ disabled: entityChecked() && !checked[entity.id] }">
-              {{ convertName(entity.name) }}
-            </label>
-          </div>
-        </div>
-        <div class="close-or-execute">
-          <button class="close" @click="displayOptionsPanel()">
-            Close
-          </button>
-          <span class="space"></span>
-          <button 
-            class="execute" 
-            :disabled="!entityChecked()"
-          >
-            <router-link
-              @click="displayOptionsPanel()"
-              :class="{ disabled: !checkedBool }"
-              :to="{
-                name: 'AgGridShow',
-                params: {
-                  entity: entitySelection[selectedIndex].name,
-                  chemTransDb: entitySelection[selectedIndex].chemTransDb
-                }
-              }"
-            >
-              Execute
-            </router-link>
-          </button>
-        </div>
-      </div>
-    </section>
-    <router-view></router-view>
+    <the-page-header :title="'Search Database'"/>
+    <div class="search-container">
+      <the-search-box
+        class="the-search-box"
+        v-model:query="chemical"
+        :placeholder="'Search Chemical Name or Structure'"
+      />
+    </div>
+    <div class="selection-container">
+      <the-selection-bar
+        class="the-selection-bar"
+        v-model:selectedIndex="selectedIndex"
+        :barTitle="'Select Table'"
+        :actionTitle="'Select'"
+        :selections="selections"
+        @execute="selectTable()"
+      />
+    </div>
+    <the-ag-grid
+      v-if="showTable"
+      :columnDefs="columnDefs"
+      :rowData="rowData"
+    />
   </div>
 </template>
 
 <script>
-import TheHeader from '@/components/TheHeader.vue'
+import ThePageHeader from '@/components/TheHeader/ThePageHeader.vue'
+import TheSearchBox from '@/components/TheSearchBox.vue'
+import TheSelectionBar from '@/components/TheSelectionBar.vue'
+import TheAgGrid from '@/components/TheAgGrid.vue'
+import columnData from '@/assets/columnData.js'
 
 export default {
-  components: { TheHeader },
+  components: { ThePageHeader, TheSearchBox, TheSelectionBar, TheAgGrid },
   data() {
     return {
-      entitySelection: [
-        {id: 0, name: 'transformation_view', chemTransDb: 1},
-        {id: 1, name: 'generic_substances', chemTransDb: 0},
-        {id: 2, name: 'qc_levels', chemTransDb: 0},
-        {id: 3, name: 'substance_relationships', chemTransDb: 0},
-        {id: 4, name: 'substance_relationship_types', chemTransDb: 0},
-        {id: 5, name: 'compounds', chemTransDb: 0},
-        {id: 6, name: 'author', chemTransDb: 1},
-        {id: 7, name: 'citation', chemTransDb: 1},
-        {id: 8, name: 'kinetics', chemTransDb: 1}
+      chemical: null,
+      rowData: null,
+      columnDefs: null,
+      selectedIndex: null,
+      showTable: false,
+      columnData: columnData,
+      selections: [
+        'Transformation View', 'Generic Substances', 'QC Levels',
+        'Substance Relationships', 'Substance Relationship Types', 
+        'Compounds', 'Author', 'Citation', 'Kinetics'
       ],
-      checked: [false, false, false, false, false, false, false, false],
-      displayOptionsBool: false,
-      checkedBool: false,
-      selectedIndex: 0
+      fields: [
+        'transformation_view', 'generic_substances', 'qc_levels',
+        'substance_relationships', 'substance_relationship_types', 
+        'compounds', 'author', 'citation', 'kinetics'
+      ],
+      apiUrl: 'http://127.0.0.1:5000/api', //'http://v2626umcth819.rtord.epa.gov:5011/api',
     }
   },
   methods: {
-    convertName(name) {
-      return name.replaceAll('_', ' ')
-        .replaceAll(/\b\w/g, char => char.toUpperCase())
+    async getRequest() {
+      await fetch(`${this.apiUrl}/connect`)
+      const response = await fetch(`${this.apiUrl}/${this.fields[this.selectedIndex]}`)
+      this.rowData = await response.json()
     },
-    displayOptionsPanel() {
-      if (this.displayOptionsBool) {
-        this.displayOptionsBool = false
-      } else {
-        this.displayOptionsBool = true
-      }
-    },
-    entityChecked() {
-      const index = this.checked.indexOf(true)
-      if (index === -1) {
-        this.selectedIndex = 0
-        this.checkedBool = false
-        return this.checkedBool
-      } else {
-        this.selectedIndex = index
-        this.checkedBool = true
-        return this.checkedBool
-      }
+    async selectTable() {
+      this.showTable = true
+      this.rowData = null
+      this.columnDefs = await this.columnData[this.fields[this.selectedIndex]]
+      await this.getRequest()
     }
-  }
+  },
 }
 </script>
 
 <style>
-a {
-  color: black;
-  text-decoration: none;
+.search-container {
+  float: left;
+  width: 50%;
 }
-.selection-panel {
+.the-search-box {
+  padding-left: 20px;
+  padding-right: 10px;
   padding-top: 20px;
   padding-bottom: 20px;
-  width: 50%;
-  margin: auto;
-}
-button.selection-bar {
-  border: 1px solid black;
-  display: block;
-  font-size: 18px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  padding-left: 10px;
-  padding-right: 10px;
   width: 100%;
-  text-align: left;
-  margin-left: auto;
-  margin-right: auto;
 }
-button.selection-bar .caret {
-  float: right
+.selection-container {
+  display: inline-block;
+  width: 50%;
 }
-.options-panel {
-  text-align: left;
-  padding-top: 5px;
-  border-left: 1px solid black;
-  border-right: 1px solid black;
-  border-bottom: 1px solid black;
-}
-.options-panel .option {
-  color: black;
-  font-size: 18px;
-  padding-top: 5px;
-  padding-bottom: 5px;
+.the-selection-bar {
   padding-left: 10px;
-  padding-right: 10px;
-}
-.close-or-execute {
-  text-align: right;
-  font-size: 18px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  padding-right: 10px;
-}
-.close-or-execute .execute {
-  font-size: 18px;
-}
-.close-or-execute .space {
-  padding: 5px;
-}
-.close-or-execute .close {
-  font-size: 18px;
-}
-.disabled {
-  opacity: 0.5;
-  pointer-events: none;
-}
-.transview {
-  text-decoration: underline;
+  padding-right: 20px;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 </style>

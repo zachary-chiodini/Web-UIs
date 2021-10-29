@@ -47,7 +47,7 @@ export default {
   margin: 0;
   padding: 5px;
   font-family: calibri;
-  font-size: 16px;
+  font-size: 15px;
   color: white;
   background: #0E6993;
   text-shadow: 0px 0px 1px grey;

@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import TheHeader from "@/components/TheHeader.vue"
+import TheHeader from "@/components/TheHeader/ThePageHeader.vue"
 import TheEntity from "@/components/TheEntity.vue"
 import sourceSchemaData from "@/assets/schema.json"
 

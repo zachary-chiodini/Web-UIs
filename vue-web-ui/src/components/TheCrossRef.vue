@@ -1,18 +1,9 @@
 <template>
   <div>
-    <input
-      class="search"
-      type="text" 
-      v-model="query" 
-      placeholder="Search Citation"
-      @keyup.enter="getRequest()" 
-    >
-    <img 
-      class="search" 
-      src="@/assets/searchicon.png" 
-      alt="Search Icon" 
-      @click="getRequest()"
-      :class="{ disabled: query == null }"
+    <the-search-box
+      v-model:query="query"
+      :placeholder="'Search Citation'"
+      @execute="getRequest()"
     />
     <div v-if="rowData != null" style="padding-top: 20px">
       <ag-grid-vue
@@ -31,10 +22,11 @@
 </template>
 
 <script>
+import TheSearchBox from "@/components/TheSearchBox.vue";
 import { AgGridVue } from "ag-grid-vue3";
 
 export default {
-  components: { AgGridVue },
+  components: { TheSearchBox, AgGridVue },
   data() {
     return {
       query: null,
@@ -129,44 +121,3 @@ export default {
   }
 }
 </script>
-
-<style>
-input.search {
-  width: 50%;
-  font-size: 18px;
-  border: 1px solid black;
-  background-image: url('../assets/writeicon.png');
-  background-size: 23px;
-  background-position-y: center;
-  background-position-x: 5px;
-  background-repeat: no-repeat;
-  text-indent: 30px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  transition:0.3s;
-}
-input.search:focus {
-  background-image: none;
-  text-indent: 5px;
-}
-img.search {
-  border-top: 1px solid black;
-  border-bottom: 1px solid black;
-  border-right: 1px solid black;
-  padding: 3px;
-  cursor: pointer;
-  vertical-align: top;
-  width: 25px;
-  height: 25px;
-  background-color: whitesmoke;
-}
-img.search:hover {
-  background-color: lightgray;
-}
-img.disabled {
-  opacity: 0.5;
-}
-img.disabled:hover{
-  background-color: whitesmoke;
-}
-</style>

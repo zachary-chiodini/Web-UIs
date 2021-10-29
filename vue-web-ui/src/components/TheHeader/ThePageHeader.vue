@@ -15,7 +15,7 @@ export default {
 <style>
 .page-title {
   font-family: Calibri;
-  font-size: 20px;
+  font-size: 15px;
   color: white;
   text-align: left;
   text-shadow: 0px 0px 5px grey;
